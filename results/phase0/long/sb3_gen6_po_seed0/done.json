@@ -1,0 +1,16 @@
+{
+  "scenario": "gen6",
+  "obs_mode": "po",
+  "seed": 0,
+  "net_seed": 1,
+  "train_steps": 300032,
+  "train_wall_s": 111.5,
+  "train_steps_per_sec": 2690.2,
+  "episodes": 66930,
+  "steps_to_solve": 3864,
+  "wall_s_to_solve": 3.32,
+  "final_train_solve_rate": 1.0,
+  "final_train_ep_len": 4.0,
+  "eval_det_solve_rate": 1.0,
+  "eval_stoch_solve_rate": 1.0
+}

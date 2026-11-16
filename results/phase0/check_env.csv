@@ -1,0 +1,5 @@
+scenario,obs_dim,num_actions,random_steps,steps_per_sec,episodes_finished,episodes_solved
+tiny,56,18,1000,26366.6,11,11
+small,207,72,1000,28636.2,1,1
+gen6,147,54,1000,24113.5,4,4
+gen8,207,72,1000,24708.3,3,2

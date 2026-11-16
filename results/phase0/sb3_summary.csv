@@ -1,0 +1,7 @@
+scenario,obs_mode,seed,net_seed,train_steps,train_wall_s,train_steps_per_sec,episodes,steps_to_solve,wall_s_to_solve,final_train_solve_rate,final_train_ep_len,eval_det_solve_rate,eval_stoch_solve_rate
+tiny,fo,0,,30208,12.9,2335.5,502,2199,2.75,1.0,45.5,0.0,1.0
+tiny,fo,1,,30208,10.6,2845.2,521,1960,0.63,1.0,47.8,0.0,1.0
+tiny,fo,2,,30208,10.5,2880.2,500,2139,0.73,1.0,44.1,0.0,1.0
+tiny,po,0,,30208,21.4,1410.2,377,2541,11.93,1.0,57.3,0.0,1.0
+tiny,po,1,,30208,10.8,2794.3,355,2247,0.76,1.0,58.5,0.0,1.0
+tiny,po,2,,30208,10.8,2791.3,335,2170,0.79,1.0,68.0,0.0,1.0
