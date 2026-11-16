@@ -1,0 +1,2 @@
+impl,seed,train_steps,train_wall_s,steps_per_sec,last100_train_ep_len,eval_sampled_solve_rate,eval_sampled_ep_len
+own,1,199680,64.3,3103.7,9.09,1.0,8.35

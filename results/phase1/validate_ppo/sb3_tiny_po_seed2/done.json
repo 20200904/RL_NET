@@ -1,0 +1,16 @@
+{
+  "scenario": "tiny",
+  "obs_mode": "po",
+  "seed": 2,
+  "net_seed": "",
+  "train_steps": 200192,
+  "train_wall_s": 62.1,
+  "train_steps_per_sec": 3225.1,
+  "episodes": 12498,
+  "steps_to_solve": 2170,
+  "wall_s_to_solve": 0.66,
+  "final_train_solve_rate": 1.0,
+  "final_train_ep_len": 9.1,
+  "eval_det_solve_rate": 1.0,
+  "eval_stoch_solve_rate": 1.0
+}

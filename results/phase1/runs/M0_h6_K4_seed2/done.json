@@ -1,0 +1,30 @@
+{
+  "method": "M0",
+  "num_hosts": 6,
+  "k": 4,
+  "seed": 2,
+  "step_limit": 100,
+  "total_steps": 300000,
+  "ppo": {
+    "num_envs": 8,
+    "num_steps": 128,
+    "learning_rate": 0.0003,
+    "anneal_lr": false,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "update_epochs": 4,
+    "num_minibatches": 4,
+    "clip_coef": 0.2,
+    "ent_coef": 0.01,
+    "vf_coef": 0.5,
+    "max_grad_norm": 0.5,
+    "hidden": 64
+  },
+  "method_params": {
+    "algo": "random"
+  },
+  "eval_episodes": 10,
+  "scenario_root": "scenarios",
+  "train": {},
+  "wall_s": 2.9
+}

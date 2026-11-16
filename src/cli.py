@@ -10,6 +10,7 @@ def main():
     parser = argparse.ArgumentParser(prog="python -m src.cli")
     sub = parser.add_subparsers(dest="command", required=True)
 
+    # ---- Phase 0 ----
     p = sub.add_parser("check-env", help="load NASim, random policy, steps/sec")
     p.add_argument("--steps", type=int, default=1000)
     p.add_argument("--out", type=Path, default=Path("results/phase0"))
@@ -27,11 +28,34 @@ def main():
     sub.add_parser("diag-det-eval",
                    help="Phase 0 diagnosis: argmax vs sampled eval on tiny")
 
+    # ---- Phase 1 ----
+    p = sub.add_parser("gen-scenarios", help="generate networks and splits")
+    p.add_argument("--hosts", type=int, nargs="+", default=[6, 8])
+    p.add_argument("--root", type=Path, default=Path("scenarios"))
+
+    p = sub.add_parser("calibrate", help="random solve rate vs step limit")
+    p.add_argument("--hosts", type=int, nargs="+", default=[6, 8])
+    p.add_argument("--out", type=Path, default=Path("results/phase1"))
+    p.add_argument("--paths-only", action="store_true",
+                   help="only compute shortest safe / unconstrained paths")
+
+    p = sub.add_parser("validate-ppo", help="hand-written PPO vs SB3 on tiny")
+    p.add_argument("--steps", type=int, default=200_000)
+    p.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2])
+    p.add_argument("--out", type=Path, default=Path("results/phase1/validate_ppo"))
+
+    p = sub.add_parser("run-grid", help="run every job of a config (resumable)")
+    p.add_argument("--config", type=Path, required=True)
+    p.add_argument("--workers", type=int, default=1)
+
+    p = sub.add_parser("stats", help="summarise eval.csv files of an experiment")
+    p.add_argument("--exp", type=Path, required=True)
+
+    p = sub.add_parser("readme-tables",
+                       help="regenerate the generated blocks in README.md")
+
     args = parser.parse_args()
-    if args.command == "diag-det-eval":
-        from src.phase0 import diag_det_eval
-        diag_det_eval.run()
-    elif args.command == "check-env":
+    if args.command == "check-env":
         from src.phase0 import check_env
         check_env.run(num_steps=args.steps, out_dir=args.out)
     elif args.command == "sb3-check":
@@ -39,6 +63,36 @@ def main():
         sb3_check.run(args.scenario, args.fully_obs, args.seeds, args.steps,
                       out_dir=args.out, net_seed=args.net_seed,
                       step_limit=args.step_limit)
+    elif args.command == "diag-det-eval":
+        from src.phase0 import diag_det_eval
+        diag_det_eval.run()
+    elif args.command == "gen-scenarios":
+        from src.envs import generate
+        for num_hosts in args.hosts:
+            specs, tried = generate.build_splits(num_hosts)
+            path = generate.save_splits(specs, tried, num_hosts, args.root)
+            print(f"wrote {path}: {len(specs)} networks, seeds tried {tried}")
+    elif args.command == "calibrate":
+        from src.eval import calibrate
+        for num_hosts in args.hosts:
+            if args.paths_only:
+                calibrate.path_lengths(num_hosts, out_dir=args.out)
+            else:
+                calibrate.run(num_hosts, out_dir=args.out)
+                calibrate.path_lengths(num_hosts, out_dir=args.out)
+    elif args.command == "validate-ppo":
+        from src.eval import validate_ppo
+        validate_ppo.run(args.steps, args.seeds, args.out)
+    elif args.command == "run-grid":
+        from src import runner
+        cfg = runner.load_config(args.config)
+        runner.run_grid(runner.expand_jobs(cfg), args.workers)
+    elif args.command == "stats":
+        from src.eval import stats
+        stats.run(args.exp)
+    elif args.command == "readme-tables":
+        from src.eval import readme_tables
+        readme_tables.run()
 
 
 if __name__ == "__main__":

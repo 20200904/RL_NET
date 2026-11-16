@@ -1,0 +1,2513 @@
+{
+ "num_hosts": 8,
+ "obs_dim": 204,
+ "num_actions": 88,
+ "generator": {
+  "num_services": 4,
+  "num_os": 2,
+  "num_processes": 2,
+  "restrictiveness": 2,
+  "random_goal": true,
+  "exploits": {
+   "e_srv_0": [
+    "srv_0",
+    null,
+    1
+   ],
+   "e_srv_1": [
+    "srv_1",
+    null,
+    2
+   ],
+   "e_srv_2_os_0": [
+    "srv_2",
+    "os_0",
+    1
+   ],
+   "e_srv_2_os_1": [
+    "srv_2",
+    "os_1",
+    1
+   ],
+   "e_srv_3_os_1": [
+    "srv_3",
+    "os_1",
+    2
+   ]
+  },
+  "privescs": {
+   "pe_proc_0": [
+    "proc_0",
+    null
+   ],
+   "pe_proc_1_os_1": [
+    "proc_1",
+    "os_1"
+   ]
+  },
+  "risky_exploits": [
+   "e_srv_1",
+   "e_srv_3_os_1"
+  ],
+  "fragile_rules": [
+   [
+    "os_1",
+    "srv_1"
+   ]
+  ],
+  "fragile_bands": {
+   "train": [
+    0.15,
+    0.4
+   ],
+   "test_a": [
+    0.15,
+    0.4
+   ],
+   "test_b": [
+    0.45,
+    0.75
+   ]
+  },
+  "seed_starts": {
+   "train": 10000,
+   "test_a": 200000,
+   "test_b": 400000
+  }
+ },
+ "seeds_tried": {
+  "train": 395,
+  "test_a": 375,
+  "test_b": 1215
+ },
+ "networks": [
+  {
+   "seed": 10003,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     1
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 10028,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     3
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 10033,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     1
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 10062,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     3
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 4
+  },
+  {
+   "seed": 10064,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 10076,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     3
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 10084,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 10094,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     1
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 10141,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     1
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 10153,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 10168,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 10177,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 10188,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 10198,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 10208,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     3
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 10225,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     1
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 10233,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 10248,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     3
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 10269,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 10276,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     4,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 4
+  },
+  {
+   "seed": 10296,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 10310,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     4,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 10311,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 10334,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     3
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 10343,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     3
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 10346,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 4
+  },
+  {
+   "seed": 10352,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     1
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 10359,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 4
+  },
+  {
+   "seed": 10373,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 10376,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 10384,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 4
+  },
+  {
+   "seed": 10394,
+   "num_hosts": 8,
+   "split": "train",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 200001,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 200046,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 200047,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 200056,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 200058,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     1
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     2
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 200067,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 4
+  },
+  {
+   "seed": 200073,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 200076,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     4,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 200079,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 200082,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 200087,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 200093,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     1
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 200101,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     4,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 200124,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     4,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 200129,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     4,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 200130,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 200154,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 200160,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     3
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 200181,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     1
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 200208,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 4
+  },
+  {
+   "seed": 200211,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 200221,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 200235,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 200284,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 200298,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     1
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 200347,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     1
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 200352,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     1
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     1
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 200353,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     4,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 200360,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 200374,
+   "num_hosts": 8,
+   "split": "test_a",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 400104,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 400108,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 400139,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     1
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 400302,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     4,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 400312,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 400324,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 400352,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 400442,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 400454,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 400516,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 400558,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 400585,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 400616,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 400638,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     3
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 400649,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 400748,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 400776,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 400870,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 400881,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     1
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 400904,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     3
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 400968,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     3
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 401004,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     3
+    ]
+   ],
+   "fragile": [
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 401027,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 401039,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     4
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 8
+  },
+  {
+   "seed": 401044,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     3
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 401076,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     4,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 5
+  },
+  {
+   "seed": 401127,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     2
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 401128,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     1
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     3
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 7
+  },
+  {
+   "seed": 401193,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     4,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     4
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "safe_path_len": 6
+  },
+  {
+   "seed": 401214,
+   "num_hosts": 8,
+   "split": "test_b",
+   "out_of_scope": [
+    [
+     3,
+     0
+    ]
+   ],
+   "fragile": [
+    [
+     1,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     2
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "safe_path_len": 8
+  }
+ ]
+}

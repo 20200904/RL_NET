@@ -1,0 +1,38 @@
+﻿# Exploratory probe (1 seed, not a result): does M1 generalise at all when
+# trained on more networks? Run after the Phase 1 grid, before gate 1.
+out: results/phase1/probe_k
+scenario_root: scenarios
+
+grid:
+  num_hosts: [6, 8]
+  methods: [M1]
+  k: [16, 32]
+  seeds: [0]
+
+# per host count
+step_limit: {6: 100, 8: 100}
+total_steps: {6: 300000, 8: 300000}
+
+methods:
+  M0: {algo: random}
+  M1: {algo: ppo, cost_penalty: 0.0}
+
+# shared by every PPO-based method
+ppo:
+  num_envs: 8
+  num_steps: 128
+  learning_rate: 0.0003
+  anneal_lr: false
+  gamma: 0.99
+  gae_lambda: 0.95
+  update_epochs: 4
+  num_minibatches: 4
+  clip_coef: 0.2
+  ent_coef: 0.01
+  vf_coef: 0.5
+  max_grad_norm: 0.5
+  hidden: 64
+
+eval:
+  sampled_episodes_per_network: 10
+
