@@ -24,8 +24,14 @@ def main():
     p.add_argument("--step-limit", type=int, default=400)
     p.add_argument("--out", type=Path, default=Path("results/phase0"))
 
+    sub.add_parser("diag-det-eval",
+                   help="Phase 0 diagnosis: argmax vs sampled eval on tiny")
+
     args = parser.parse_args()
-    if args.command == "check-env":
+    if args.command == "diag-det-eval":
+        from src.phase0 import diag_det_eval
+        diag_det_eval.run()
+    elif args.command == "check-env":
         from src.phase0 import check_env
         check_env.run(num_steps=args.steps, out_dir=args.out)
     elif args.command == "sb3-check":
