@@ -13,8 +13,10 @@ import pandas as pd
 
 README = Path("README.md")
 PHASE1 = Path("results/phase1")
+CONVERGE = {"1M": PHASE1 / "converge" / "1m", "2M": PHASE1 / "converge" / "2m"}
 SPLIT_NAMES = {"train": "training pool", "test_a": "test A (held-out)",
                "test_b": "test B (more fragile hosts)"}
+SPLIT_ORDER = {"train": 0, "test_a": 1, "test_b": 2}
 
 
 def _pct(x):
@@ -25,9 +27,9 @@ def _num(x):
     return "n/a" if pd.isna(x) else f"{x:.2f}"
 
 
-def _range(row, metric):
-    return (f"{_pct(row[metric + '_mean'])} "
-            f"({_pct(row[metric + '_min'])}–{_pct(row[metric + '_max'])})")
+def _range(row, metric, fmt=_pct):
+    return (f"{fmt(row[metric + '_mean'])} "
+            f"({fmt(row[metric + '_min'])}–{fmt(row[metric + '_max'])})")
 
 
 def _table(headers, rows):
@@ -57,42 +59,92 @@ def _calibration():
          "test A", "test B"], rows)
 
 
-def _results(exp, label_k=False):
+RESULT_HEADERS = [
+    "method", "hosts", "K", "train steps", "evaluated on", "seeds",
+    "solve rate, mean (min–max)", "violations among solved, mean (min–max)",
+    "safe solve rate", "C1 / episode", "C2 / episode",
+    "cost per attack attempt", "scan before exploit", "steps when solved",
+]
+
+
+def _result_rows(exp, steps_label):
     df = pd.read_csv(exp / "summary.csv")
-    df = df[df["mode"] == "sampled"]
+    df = df[df["mode"] == "sampled"].copy()
+    df["order"] = df["split"].map(SPLIT_ORDER)
     rows = []
-    for _, r in df.sort_values(["num_hosts", "method", "k", "split"],
-                               key=lambda s: s.map(
-                                   {"train": 0, "test_a": 1, "test_b": 2}
-                               ) if s.name == "split" else s).iterrows():
+    for _, r in df.sort_values(["num_hosts", "method", "k", "order"]).iterrows():
         rows.append([
-            r["method"], r["num_hosts"], r["k"], SPLIT_NAMES[r["split"]],
-            r["seeds"], _range(r, "solve_rate"), _range(r, "violation_rate"),
-            _pct(r["violation_rate_among_solved_mean"]),
+            r["method"], r["num_hosts"], r["k"],
+            "none" if r["method"] == "M0" else steps_label,
+            SPLIT_NAMES[r["split"]], r["seeds"],
+            _range(r, "solve_rate"), _range(r, "violation_rate_among_solved"),
             _pct(r["safe_solve_rate_mean"]),
-            _num(r["mean_cost_c1_mean"]), _num(r["mean_cost_c2_mean"]),
+            _num(r["cost_c1_per_episode_mean"]),
+            _num(r["cost_c2_per_episode_mean"]),
+            _num(r["cost_per_attack_attempt_mean"]),
+            _pct(r["scan_before_exploit_mean"]),
             _num(r["mean_steps_solved_mean"]),
         ])
+    return rows
+
+
+def _k4():
+    return _table(RESULT_HEADERS, _result_rows(PHASE1 / "runs", "300k"))
+
+
+def _converged():
+    rows = []
+    for label, exp in CONVERGE.items():
+        rows += _result_rows(exp, label)
+    return _table(RESULT_HEADERS, rows)
+
+
+def _steps_to_converge():
+    df = pd.read_csv(CONVERGE["2M"] / "steps_to_converge.csv")
+    rows = [[
+        r["k"], r["seed"],
+        "not reached" if pd.isna(r["first_step_solve_ge_90"])
+        else f'{int(r["first_step_solve_ge_90"]):,}',
+        "not reached" if pd.isna(r["first_step_flat"])
+        else f'{int(r["first_step_flat"]):,}',
+        _pct(r["final_solve_rate"]), _num(r["final_ep_len"]),
+        _num(r["final_cost"]),
+    ] for _, r in df.sort_values(["k", "seed"]).iterrows()]
     return _table(
-        ["method", "hosts", "K", "evaluated on", "seeds",
-         "solve rate, mean (min–max)", "violation rate, mean (min–max)",
-         "violations among solved", "safe solve rate", "C1 / episode",
-         "C2 / episode", "steps when solved"], rows)
+        ["K", "seed", "first step with train solve rate ≥ 90%",
+         "first step where it is flat", "solve rate, last 200k steps",
+         "episode length, last 200k", "cost / episode, last 200k"], rows)
+
+
+GAP_COLUMNS = [
+    ("solve_rate", "solve rate", _pct),
+    ("violation_rate_among_solved", "violations among solved", _pct),
+    ("cost_c1_per_episode", "C1 / episode", _num),
+    ("cost_c2_per_episode", "C2 / episode", _num),
+    ("cost_per_attack_attempt", "cost per attack attempt", _num),
+]
 
 
 def _gaps():
-    df = pd.read_csv(PHASE1 / "runs" / "gaps.csv")
-    df = df[(df["mode"] == "sampled") & (df["method"] == "M1")]
-    rows = [[
-        r["num_hosts"], r["k"], SPLIT_NAMES[r["test_split"]], r["seeds"],
-        _pct(r["train_solve_rate"]), _pct(r["test_solve_rate"]),
-        _pct(r["capability_gap"]), _pct(r["train_violation_rate"]),
-        _pct(r["test_violation_rate"]), _pct(r["safety_gap"]),
-    ] for _, r in df.iterrows()]
-    return _table(
-        ["hosts", "K", "test set", "seeds", "solve: train", "solve: test",
-         "capability gap", "violation: train", "violation: test",
-         "safety gap"], rows)
+    rows = []
+    for label, exp in CONVERGE.items():
+        df = pd.read_csv(exp / "gaps.csv")
+        df = df[(df["mode"] == "sampled") & (df["rq3_included"] == 1)]
+        for (k, test), part in df.groupby(["k", "test_split"]):
+            part = part.set_index("metric")
+            row = [k, label, SPLIT_NAMES[test], int(part["seeds"].iloc[0])]
+            for metric, _, fmt in GAP_COLUMNS:
+                r = part.loc[metric]
+                sign = "+" if r["gap_mean"] >= 0 else "−"
+                # a difference of two rates is in percentage points
+                gap = (f'{100 * abs(r["gap_mean"]):.1f} pp' if fmt is _pct
+                       else fmt(abs(r["gap_mean"])))
+                row.append(f'{fmt(r["train_mean"])} → {fmt(r["test_mean"])} '
+                           f'({sign}{gap})')
+            rows.append(row)
+    headers = ["K", "train steps", "test set", "seeds"] + [
+        f"{name}: train → test (gap)" for _, name, _ in GAP_COLUMNS]
+    return _table(headers, rows)
 
 
 def _ppo_validation():
@@ -109,16 +161,19 @@ def _ppo_validation():
 
 BLOCKS = {
     "calibration": _calibration,
-    "rq1": lambda: _results(PHASE1 / "runs"),
+    "k4": _k4,
+    "steps_to_converge": _steps_to_converge,
+    "converged": _converged,
     "gaps": _gaps,
-    "probe": lambda: _results(PHASE1 / "probe_k"),
     "ppo_validation": _ppo_validation,
 }
 
 
-def run():
-    text = README.read_text(encoding="utf-8")
-    for name, build in BLOCKS.items():
+def fill_blocks(path, blocks):
+    """Rewrite every generated block of ``path``; a missing csv gives "not run"."""
+    path = Path(path)
+    text = path.read_text(encoding="utf-8")
+    for name, build in blocks.items():
         try:
             body = build()
         except FileNotFoundError:
@@ -127,8 +182,12 @@ def run():
             rf"(<!-- BEGIN GENERATED: {name} -->).*?(<!-- END GENERATED: {name} -->)",
             re.S)
         if not pattern.search(text):
-            print(f"marker for '{name}' not found in README.md")
+            print(f"marker for '{name}' not found in {path}")
             continue
         text = pattern.sub(lambda m: f"{m.group(1)}\n{body}\n{m.group(2)}", text)
-    README.write_text(text, encoding="utf-8")
+    path.write_text(text, encoding="utf-8")
+
+
+def run():
+    fill_blocks(README, BLOCKS)
     print("README.md tables regenerated")

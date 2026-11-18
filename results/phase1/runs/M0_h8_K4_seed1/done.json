@@ -26,5 +26,5 @@
   "eval_episodes": 10,
   "scenario_root": "scenarios",
   "train": {},
-  "wall_s": 2.8
+  "wall_s": 4.5
 }

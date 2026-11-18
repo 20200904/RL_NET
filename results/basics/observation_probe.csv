@@ -1,0 +1,10 @@
+network_seed,case,action,result_flags,target_row_shows
+10003,OS scan of the DMZ host,"os_scan  -> (1, 0)",success,"address, reachable=1, discovered=1, os:os_1"
+10003,service scan of the DMZ host,"service_scan  -> (1, 0)",success,"address, reachable=1, discovered=1, service:srv_0, service:srv_1"
+10003,exploit whose service the host does not run,"exploit e_srv_2_os_0 -> (1, 0)",permission_error,(nothing)
+10003,exploit on a host not yet discovered,"exploit e_srv_1 -> (3, 2)",connection_error,(nothing)
+10003,exploit that fits the DMZ host,"exploit e_srv_0 -> (1, 0)",success,"address, compromised=1, reachable=1, discovered=1, value=1, access=1, os:os_1, service:srv_0, service:srv_1"
+10003,process scan of the compromised DMZ host,"process_scan  -> (1, 0)",success,"address, reachable=1, discovered=1, access=1, process:proc_1"
+10003,subnet scan from the DMZ host,"subnet_scan  -> (1, 0)",success,"address, compromised=1, reachable=1, discovered=1"
+10003,exploit that fits the host but the firewall blocks,"exploit e_srv_1 -> (3, 2)",permission_error,(nothing)
+10003,exploit that does not fit the same host,"exploit e_srv_2_os_0 -> (3, 2)",permission_error,(nothing)

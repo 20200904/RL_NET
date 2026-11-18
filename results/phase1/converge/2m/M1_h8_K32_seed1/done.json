@@ -1,0 +1,57 @@
+{
+  "method": "M1",
+  "num_hosts": 8,
+  "k": 32,
+  "seed": 1,
+  "step_limit": 100,
+  "total_steps": 2000000,
+  "ppo": {
+    "num_envs": 8,
+    "num_steps": 128,
+    "learning_rate": 0.0003,
+    "anneal_lr": false,
+    "gamma": 0.99,
+    "gae_lambda": 0.95,
+    "update_epochs": 4,
+    "num_minibatches": 4,
+    "clip_coef": 0.2,
+    "ent_coef": 0.01,
+    "vf_coef": 0.5,
+    "max_grad_norm": 0.5,
+    "hidden": 64
+  },
+  "method_params": {
+    "algo": "ppo",
+    "cost_penalty": 0.0
+  },
+  "eval_episodes": 10,
+  "scenario_root": "scenarios",
+  "train": {
+    "config": {
+      "total_steps": 2000000,
+      "num_envs": 8,
+      "num_steps": 128,
+      "learning_rate": 0.0003,
+      "anneal_lr": false,
+      "gamma": 0.99,
+      "gae_lambda": 0.95,
+      "update_epochs": 4,
+      "num_minibatches": 4,
+      "clip_coef": 0.2,
+      "ent_coef": 0.01,
+      "vf_coef": 0.5,
+      "max_grad_norm": 0.5,
+      "hidden": 64,
+      "cost_penalty": 0.0,
+      "seed": 1
+    },
+    "train_steps": 1999872,
+    "train_wall_s": 601.5,
+    "train_steps_per_sec": 3324.5,
+    "train_episodes": 171467,
+    "last100_solve_rate": 1.0,
+    "last100_ep_len": 8.27,
+    "last100_cost": 0.82
+  },
+  "wall_s": 631.8
+}

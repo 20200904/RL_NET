@@ -6,3 +6,61 @@ __pycache__/
 results/**/*.pt
 results/**/*.zip
 results/**/events.out.tfevents.*
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# --- Virtual environments (uv / venv) ---
+.venv/
+venv/
+env/
+
+# --- Model weights and checkpoints (large, reproducible from configs + seeds) ---
+*.pt
+*.pth
+*.ckpt
+*.zip
+**/checkpoints/
+**/models/
+
+# --- Training logs ---
+# TensorBoard event files
+events.out.tfevents.*
+**/tb/
+**/tensorboard/
+**/runs/**/*.log
+
+# --- Keep: results csv and figures are committed ---
+# (results/**/*.csv, results/**/*.png are NOT ignored)
+
+# --- Secrets ---
+.env
+.env.*
+
+# --- Claude Code local settings (CLAUDE.md is committed) ---
+.claude/settings.local.json
+claude.md 
+DECISIONS.md
+gitignore
+HYPOTHESES.md 
+CLAUDE_CODE_PLAN.md
+REWARD_REDESIGN_PLAN.md
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini
+.DS_Store

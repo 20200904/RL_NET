@@ -2,7 +2,7 @@
 import gymnasium as gym
 import numpy as np
 
-from src.envs.generate import make_env, make_scenario
+from src.envs.generate import make_env, verified_scenario
 
 
 class MultiNetEnv(gym.Env):
@@ -21,7 +21,7 @@ class MultiNetEnv(gym.Env):
         self.step_limit = step_limit
         self._rng = np.random.default_rng(seed)
         # scenario generation reseeds numpy's global RNG, so do it all up front
-        self._scenarios = [make_scenario(s.seed, s.num_hosts) for s in self.specs]
+        self._scenarios = [verified_scenario(s) for s in self.specs]
         self._envs = [None] * len(self.specs)
         self.network = 0
         self._env = self._get(0)

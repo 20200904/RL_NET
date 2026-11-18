@@ -1,0 +1,15 @@
+action,cost,reward
+service_scan,1,
+os_scan,1,
+subnet_scan,1,
+process_scan,1,
+exploit e_srv_0,1,gives access 1
+exploit e_srv_1,1,gives access 2
+exploit e_srv_2_os_0,1,gives access 1
+exploit e_srv_2_os_1,1,gives access 1
+exploit e_srv_3_os_1,1,gives access 2
+privesc pe_proc_0,1,gives root
+privesc pe_proc_1_os_1,1,gives root
+root on a sensitive host (once),,10.0
+root on any other host (once),,1.0
+"subnet scan, per newly discovered host",,1.0

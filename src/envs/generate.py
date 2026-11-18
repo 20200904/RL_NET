@@ -10,6 +10,7 @@ alone), and the exploit / privilege-escalation table. The table is fixed so
 that an action index means the same thing in every network; NASim's own
 generator would re-draw it per seed.
 """
+import hashlib
 import json
 from collections import deque
 from dataclasses import asdict, dataclass
@@ -27,6 +28,7 @@ NUM_OS = 2
 NUM_PROCESSES = 2
 RESTRICTIVENESS = 2
 DMZ_SUBNET = 1
+SENSITIVE_SUBNET = 2
 
 # name -> (service, os, access). os=None means the exploit works on any OS.
 EXPLOITS = {
@@ -85,6 +87,42 @@ class FixedTableGenerator(ScenarioGenerator):
             for name, (proc, os) in PRIVESCS.items()
         }
 
+    def _generate_firewall(self, restrictiveness):
+        """Same rules as NASim's version, but independent of set order.
+
+        NASim draws the permitted services with ``np.random.choice`` over
+        ``list(a_set_of_strings)``. The order of a set of strings depends on
+        Python's per-process string hash seed, so the same network seed gave
+        a different firewall in every process. Here the candidates are sorted
+        before drawing.
+        """
+        vulnerable_services = {}
+        for addr, host in self.hosts.items():
+            services = vulnerable_services.setdefault(addr[0], set())
+            for e_def in self.exploits.values():
+                if self._host_is_vulnerable_to_exploit(host, e_def):
+                    services.add(e_def[u.EXPLOIT_SERVICE])
+
+        firewall = {}
+        num_subnets = len(self.subnets)
+        for src in range(num_subnets):
+            for dest in range(num_subnets):
+                if src == dest or not self.topology[src][dest]:
+                    continue
+                if src > SENSITIVE_SUBNET and dest > SENSITIVE_SUBNET:
+                    # everything is allowed between user subnets
+                    firewall[(src, dest)] = set(self.services)
+                    continue
+                available = sorted(vulnerable_services.get(dest, ()))
+                if len(available) < restrictiveness:
+                    firewall[(src, dest)] = set(available)
+                    continue
+                picked = np.random.choice(
+                    len(available), size=restrictiveness, replace=False
+                )
+                firewall[(src, dest)] = {available[i] for i in picked}
+        self.firewall = firewall
+
 
 @dataclass(frozen=True)
 class NetworkSpec:
@@ -94,6 +132,8 @@ class NetworkSpec:
     out_of_scope: tuple
     fragile: tuple
     safe_path_len: int
+    # sha256 of the network's fingerprint, checked whenever it is rebuilt
+    digest: str = ""
 
     @classmethod
     def from_dict(cls, d):
@@ -102,6 +142,7 @@ class NetworkSpec:
             out_of_scope=tuple(tuple(a) for a in d["out_of_scope"]),
             fragile=tuple(tuple(a) for a in d["fragile"]),
             safe_path_len=d["safe_path_len"],
+            digest=d.get("digest", ""),
         )
 
 
@@ -138,6 +179,70 @@ def fingerprint(scenario, out_of_scope):
     )
     goals = tuple(sorted(scenario.sensitive_addresses))
     return hosts, firewall, goals, tuple(out_of_scope)
+
+
+def describe(scenario, out_of_scope):
+    """Everything that defines a network and its costs, as plain JSON data.
+
+    Lists are in a fixed order (hosts by address, firewall by subnet pair,
+    services sorted), so the result is the same in every process.
+    """
+    hosts = sorted(scenario.hosts.items())
+    return dict(
+        subnets=[int(n) for n in scenario.subnets],
+        topology=[[int(x) for x in row] for row in scenario.topology],
+        hosts=[
+            dict(address=list(addr),
+                 os={k: bool(v) for k, v in h.os.items()},
+                 services={k: bool(v) for k, v in h.services.items()},
+                 processes={k: bool(v) for k, v in h.processes.items()},
+                 value=float(h.value),
+                 discovery_value=float(h.discovery_value))
+            for addr, h in hosts
+        ],
+        firewall=[[list(pair), sorted(str(s) for s in allowed)]
+                  for pair, allowed in sorted(scenario.firewall.items())],
+        exploits={
+            name: dict(service=e[u.EXPLOIT_SERVICE], os=e[u.EXPLOIT_OS],
+                       access=int(e[u.EXPLOIT_ACCESS]),
+                       prob=float(e[u.EXPLOIT_PROB]), cost=float(e[u.EXPLOIT_COST]))
+            for name, e in sorted(scenario.exploits.items())
+        },
+        privescs={
+            name: dict(process=p[u.PRIVESC_PROCESS], os=p[u.PRIVESC_OS],
+                       access=int(p[u.PRIVESC_ACCESS]),
+                       prob=float(p[u.PRIVESC_PROB]), cost=float(p[u.PRIVESC_COST]))
+            for name, p in sorted(scenario.privescs.items())
+        },
+        scan_costs=[float(scenario.service_scan_cost), float(scenario.os_scan_cost),
+                    float(scenario.subnet_scan_cost),
+                    float(scenario.process_scan_cost)],
+        sensitive_hosts=[[list(addr), float(value)] for addr, value
+                         in sorted(scenario.sensitive_hosts.items())],
+        out_of_scope=sorted(list(a) for a in out_of_scope),
+        fragile=[list(a) for a in fragile_hosts(scenario)],
+        fragile_rules=[list(r) for r in FRAGILE_RULES],
+        risky_exploits=sorted(RISKY_EXPLOITS),
+    )
+
+
+def digest(scenario, out_of_scope):
+    """Stable hash of ``describe``: identical in every process and on every OS."""
+    plain = json.dumps(describe(scenario, out_of_scope), sort_keys=True)
+    return hashlib.sha256(plain.encode()).hexdigest()[:16]
+
+
+def verified_scenario(spec):
+    """Rebuild a network from its seed and check it is the recorded one."""
+    scenario = make_scenario(spec.seed, spec.num_hosts)
+    if digest(scenario, spec.out_of_scope) != spec.digest:
+        raise RuntimeError(
+            f"network seed {spec.seed} does not regenerate to the recorded "
+            "network (digest mismatch); do not use these splits"
+        )
+    if fragile_hosts(scenario) != spec.fragile:
+        raise RuntimeError(f"network seed {spec.seed}: fragile hosts changed")
+    return scenario
 
 
 def shortest_safe_path(scenario, out_of_scope, fragile):
@@ -189,7 +294,8 @@ def try_make_spec(seed, num_hosts, split):
         oos = (candidates[idx],)
         path_len = shortest_safe_path(scenario, oos, fragile)
         if path_len is not None:
-            spec = NetworkSpec(seed, num_hosts, split, oos, fragile, path_len)
+            spec = NetworkSpec(seed, num_hosts, split, oos, fragile, path_len,
+                               digest(scenario, oos))
             return spec, fingerprint(scenario, oos)
     return None
 
@@ -216,7 +322,7 @@ def build_splits(num_hosts, sizes=None):
 
 def make_env(spec, step_limit, scenario=None):
     """Build the full training/eval environment for one network."""
-    scenario = scenario or make_scenario(spec.seed, spec.num_hosts)
+    scenario = scenario or verified_scenario(spec)
     env = NASimEnv(scenario, fully_obs=False, flat_actions=True, flat_obs=True)
     env = CostWrapper(
         env, spec.out_of_scope, spec.fragile, RISKY_EXPLOITS, step_limit

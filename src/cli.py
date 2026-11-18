@@ -48,6 +48,21 @@ def main():
     p.add_argument("--config", type=Path, required=True)
     p.add_argument("--workers", type=int, default=1)
 
+    p = sub.add_parser("re-eval",
+                       help="rewrite eval.csv of finished runs from saved models")
+    p.add_argument("--config", type=Path, required=True)
+
+    p = sub.add_parser("convergence", help="learning curves, steps to converge")
+    p.add_argument("--exp", type=Path, required=True)
+
+    sub.add_parser("basics", help="rule agents, observation and cost checks")
+    sub.add_parser("reward-audit", help="reward redesign stage 1 (no training)")
+    p = sub.add_parser("reward-grid", help="reward redesign stage 2 (no training)")
+    p.add_argument("--rescore", action="store_true",
+                   help="only rescore saved rollouts and path searches")
+    sub.add_parser("reward-report",
+                   help="regenerate the blocks in report/reward_redesign.md")
+
     p = sub.add_parser("stats", help="summarise eval.csv files of an experiment")
     p.add_argument("--exp", type=Path, required=True)
 
@@ -87,6 +102,25 @@ def main():
         from src import runner
         cfg = runner.load_config(args.config)
         runner.run_grid(runner.expand_jobs(cfg), args.workers)
+    elif args.command == "re-eval":
+        from src import runner
+        for job in runner.expand_jobs(runner.load_config(args.config)):
+            print(runner.reeval_job(job), flush=True)
+    elif args.command == "convergence":
+        from src.eval import convergence
+        convergence.run(args.exp)
+    elif args.command == "reward-audit":
+        from src.eval import reward_audit
+        reward_audit.run()
+    elif args.command == "reward-grid":
+        from src.eval import reward_grid
+        reward_grid.rescore() if args.rescore else reward_grid.run()
+    elif args.command == "reward-report":
+        from src.eval import reward_report
+        reward_report.run()
+    elif args.command == "basics":
+        from src.eval import basics
+        basics.run()
     elif args.command == "stats":
         from src.eval import stats
         stats.run(args.exp)

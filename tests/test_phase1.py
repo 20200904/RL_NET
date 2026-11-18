@@ -1,6 +1,13 @@
+import dataclasses
 import json
+import os
+import subprocess
+import sys
+
+from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import pytest
 import torch
 from nasim.envs import NASimEnv
@@ -12,6 +19,7 @@ from src.envs import generate as g
 from src.envs.cost_wrapper import attack_cost
 from src.envs.multi_env import MultiNetEnv
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
 OOS = frozenset({(3, 0)})
 FRAGILE = frozenset({(3, 1), (3, 0)})
 RISKY = g.RISKY_EXPLOITS
@@ -152,6 +160,112 @@ def test_saved_splits_are_disjoint(num_hosts):
     assert len(seeds["test_a"]) == len(seeds["test_b"]) == 30
     assert not seeds["train"] & (seeds["test_a"] | seeds["test_b"])
     assert not seeds["test_a"] & seeds["test_b"]
+
+
+def test_networks_identical_across_processes():
+    # Regression test: NASim's firewall generation depends on the per-process
+    # string hash seed. The same network seed must give the same network in
+    # every process, or train and test sets silently change between runs.
+    code = ("from src.envs import generate as g;"
+            "print([g.digest(g.make_scenario(s, 8), ()) for s in range(10000, 10020)])")
+    outputs = set()
+    for hash_seed in ("1", "2", "3"):
+        env = dict(os.environ, PYTHONHASHSEED=hash_seed)
+        outputs.add(subprocess.run(
+            [sys.executable, "-W", "ignore", "-c", code], env=env,
+            capture_output=True, text=True, check=True).stdout)
+    assert len(outputs) == 1
+
+
+def test_train_and_eval_identical_across_processes(tmp_path):
+    # The in-process test below (test_same_seed_same_result) cannot see
+    # anything that depends on the process, such as the string hash seed.
+    # This one runs a short train + eval job in two separate processes with
+    # different hash seeds and compares what they write.
+    #
+    # A job this short barely touches the firewall, so equal outputs alone
+    # are weak evidence: with NASim's original firewall code, hash seeds 1
+    # and 2 build different networks yet produced identical eval.csv and
+    # training logs. The child therefore also records the digest of every
+    # network it actually builds, and those are compared too.
+    if not g.splits_path(8).exists():
+        pytest.skip("splits not generated")
+    hash_seeds = ("1", "2")
+    # precondition: the bug can only show if the two processes iterate a set
+    # of service names in different orders
+    orders = {
+        subprocess.run(
+            [sys.executable, "-c", "print(list({'srv_0','srv_1','srv_2','srv_3'}))"],
+            env=dict(os.environ, PYTHONHASHSEED=h), capture_output=True,
+            text=True, check=True).stdout
+        for h in hash_seeds
+    }
+    assert len(orders) == 2, "pick hash seeds that order string sets differently"
+
+    code = (
+        "import json, sys\n"
+        "from src.envs import generate as g\n"
+        "built, make = [], g.make_scenario\n"
+        "def recording_make(seed, num_hosts):\n"
+        "    scenario = make(seed, num_hosts)\n"
+        "    built.append([seed, g.digest(scenario, ())])\n"
+        "    return scenario\n"
+        "g.make_scenario = recording_make\n"
+        "from src import runner\n"
+        "runner.run_job(dict(method='M1', num_hosts=8, k=2, seed=5,"
+        " out=sys.argv[1], step_limit=30, total_steps=1024,"
+        " ppo=dict(num_envs=4, num_steps=64), method_params=dict(algo='ppo'),"
+        " eval_episodes=1, scenario_root='scenarios'))\n"
+        "open(sys.argv[1] + '/networks.json', 'w').write(json.dumps(built))\n"
+    )
+    outputs = []
+    for hash_seed in hash_seeds:
+        out = tmp_path / hash_seed
+        proc = subprocess.run(
+            [sys.executable, "-W", "ignore", "-c", code, str(out)],
+            env=dict(os.environ, PYTHONHASHSEED=hash_seed), cwd=REPO_ROOT,
+            capture_output=True, text=True)
+        assert proc.returncode == 0, proc.stderr[-2000:]
+        run_dir = out / "M1_h8_K2_seed5"
+        outputs.append(dict(
+            networks=json.loads((out / "networks.json").read_text()),
+            eval=(run_dir / "eval.csv").read_text(),
+            train=pd.read_csv(run_dir / "episodes.csv").drop(columns="wall_s"),
+        ))
+    first, second = outputs
+    # train (2) + test A (30) + test B (30) networks
+    assert len({seed for seed, _ in first["networks"]}) == 62
+    assert first["networks"] == second["networks"]
+    assert first["eval"] == second["eval"]
+    assert first["train"].equals(second["train"])
+    assert len(first["train"]) > 0
+
+
+def test_digest_covers_everything_that_defines_a_network(specs):
+    spec = specs[0]
+    scenario = g.make_scenario(spec.seed, spec.num_hosts)
+    described = g.describe(scenario, spec.out_of_scope)
+    assert set(described) >= {
+        "hosts", "firewall", "exploits", "privescs", "sensitive_hosts",
+        "out_of_scope", "fragile", "fragile_rules", "risky_exploits",
+        "subnets", "topology",
+    }
+    assert {"os", "services", "processes"} <= set(described["hosts"][0])
+    base = g.digest(scenario, spec.out_of_scope)
+    # a different out-of-scope host is a different network
+    other = [a for a in scenario.address_space if a not in spec.out_of_scope][0]
+    assert g.digest(scenario, (other,)) != base
+    # so is a firewall that lets one more service through
+    pair = sorted(scenario.firewall)[0]
+    scenario.firewall[pair] = set(scenario.firewall[pair]) ^ {"srv_3"}
+    assert g.digest(scenario, spec.out_of_scope) != base
+
+
+def test_digest_mismatch_is_detected(specs):
+    wrong = dataclasses.replace(specs[0], digest="0" * 16)
+    with pytest.raises(RuntimeError):
+        g.verified_scenario(wrong)
+    assert g.verified_scenario(specs[0]) is not None
 
 
 def test_fragile_fraction_shift(specs):

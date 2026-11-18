@@ -96,6 +96,43 @@ def run_job(job):
     return dict(run=run_dir.name, skipped=False, wall_s=meta["wall_s"])
 
 
+def reeval_job(job):
+    """Rewrite eval.csv of a finished run from its saved model, no retraining.
+
+    Used when the evaluation records gain a column. Evaluation is seeded and
+    single-threaded, so it replays the episodes of the original eval.csv.
+    """
+    import torch
+    from src.agents.ppo import Agent
+
+    run_dir = Path(job["out"]) / run_name(job)
+    if not (run_dir / "done.json").exists():
+        return dict(run=run_dir.name, reevaluated=False)
+    splits = load_splits(job["num_hosts"], Path(job["scenario_root"]))
+    train_specs = splits["train"][:job["k"]]
+    step_limit, seed = job["step_limit"], job["seed"]
+    probe = MultiNetEnv(train_specs[:1], step_limit)
+    is_random = job["method_params"]["algo"] == "random"
+    if is_random:
+        agent = RandomAgent(int(probe.action_space.n), seed=seed)
+    else:
+        agent = Agent(probe.observation_space.shape[0],
+                      int(probe.action_space.n), job["ppo"]["hidden"])
+        agent.load_state_dict(torch.load(run_dir / "model.pt"))
+
+    rows = []
+    eval_sets = dict(train=train_specs, test_a=splits["test_a"],
+                     test_b=splits["test_b"])
+    for split, specs in eval_sets.items():
+        rows += evaluate(agent, specs, split, step_limit, job["eval_episodes"],
+                         deterministic=False, seed=seed)
+        if not is_random:
+            rows += evaluate(agent, specs, split, step_limit, 1,
+                             deterministic=True, seed=seed)
+    write_rows(rows, run_dir / "eval.csv")
+    return dict(run=run_dir.name, reevaluated=True)
+
+
 def run_grid(jobs, workers=1):
     """Run jobs, at most ``workers`` (<= 3 on the 8 GB laptop) at a time."""
     workers = max(1, min(workers, 3))

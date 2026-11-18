@@ -18,10 +18,10 @@
     "seed": 2
   },
   "train_steps": 299008,
-  "train_wall_s": 85.6,
-  "train_steps_per_sec": 3493.3,
-  "train_episodes": 26969,
+  "train_wall_s": 124.6,
+  "train_steps_per_sec": 2399.9,
+  "train_episodes": 25877,
   "last100_solve_rate": 1.0,
-  "last100_ep_len": 7.15,
-  "last100_cost": 0.86
+  "last100_ep_len": 7.01,
+  "last100_cost": 0.67
 }
